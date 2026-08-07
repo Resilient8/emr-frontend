@@ -1,0 +1,9 @@
+# Quasar / Vite build & cache
+dist/
+.quasar/
+.output/
+node_modules/
+.env
+.env.*
+*.log
+*.dat

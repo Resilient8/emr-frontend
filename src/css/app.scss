@@ -1,0 +1,25 @@
+// app global css in SCSS form
+/* src/css/app.scss */
+
+/* ธีม Forest (เขียว) */
+body.theme-forest {
+  --q-primary: #26A69A; /* Teal */
+  --q-secondary: #FFC107; /* Amber */
+}
+/* คุณสามารถปรับแก้สีอื่นๆ หรือพื้นหลังของหน้า Home ได้ที่นี่ */
+body.theme-forest .hero-section {
+  background: linear-gradient(-45deg, #004D40, #26A69A, #A5D6A7);
+  background-size: 400% 400%;
+  animation: animateGradient 15s ease infinite; /* สมมติว่ามี keyframes นี้อยู่ */
+}
+
+/* ธีม Ocean (น้ำเงิน-ฟ้า) */
+body.theme-ocean {
+  --q-primary: #1E88E5; /* Blue */
+  --q-secondary: #4DD0E1; /* Cyan */
+}
+body.theme-ocean .hero-section {
+  background: linear-gradient(-45deg, #0D47A1, #1E88E5, #90CAF9);
+  background-size: 400% 400%;
+  animation: animateGradient 15s ease infinite;
+}
