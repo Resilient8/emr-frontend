@@ -62,145 +62,169 @@
     >
       <div class="column full-height">
 
-        <q-scroll-area
-          class="col"
-          :thumb-style="{ width: '4px', opacity: 0.5, right: '2px', backgroundColor: '#64748b' }"
-        >
-          <q-list class="q-pa-md">
+        <!-- 🔒 1. กรณีที่ยังไม่ได้ Login (โชว์ข้อความล็อกระบบ) -->
+        <div v-if="!currentUser" class="col column flex-center text-center q-pa-lg">
+          <q-icon name="lock_person" size="64px" color="blue-grey-7" class="q-mb-md" />
+          <div class="text-h6 text-blue-grey-3 text-weight-bold">System Locked</div>
+          <div class="text-caption text-blue-grey-5 q-mt-sm q-mb-lg" v-if="!isDrawerCollapsed">
+            กรุณาเข้าสู่ระบบเพื่อปลดล็อก<br>เมนูการใช้งาน EMR
+          </div>
 
-            <div v-for="(section, index) in menuSections" :key="index">
+          <q-btn
+            v-if="!isDrawerCollapsed && $route.path !== '/myemr-app/login'"
+            unelevated
+            rounded
+            color="primary"
+            text-color="dark"
+            label="ไปหน้า Login"
+            icon="login"
+            to="/myemr-app/login"
+            class="text-weight-bold shadow-3 q-px-md"
+          />
+        </div>
 
-              <q-item-label
-                v-if="section.label && !isDrawerCollapsed && section.items.length > 0"
-                header
-                class="section-label"
-              >
-                {{ section.label }}
-              </q-item-label>
+        <!-- 🔓 2. กรณีที่ Login แล้ว (แสดงเมนูปกติของคุณ) -->
+        <template v-else>
+          <q-scroll-area
+            class="col"
+            :thumb-style="{ width: '4px', opacity: 0.5, right: '2px', backgroundColor: '#64748b' }"
+          >
+            <q-list class="q-pa-md">
 
-              <div v-for="item in section.items" :key="item.path">
+              <div v-for="(section, index) in menuSections" :key="index">
 
-                <q-item
-                  v-if="!item.children"
-                  clickable
-                  v-ripple
-                  :to="item.path"
-                  :class="['modern-menu-item', item.isLogout ? 'logout-item' : '']"
-                  active-class="modern-active"
-                  @click="item.isLogout ? handleLogout() : null"
+                <q-item-label
+                  v-if="section.label && !isDrawerCollapsed && section.items.length > 0"
+                  header
+                  class="section-label"
                 >
-                  <q-item-section avatar>
-                    <q-icon :name="item.icon" :color="item.iconColor || ''"/>
-                  </q-item-section>
-                  <q-item-section v-if="!isDrawerCollapsed">{{ t(item.labelKey) }}</q-item-section>
+                  {{ section.label }}
+                </q-item-label>
 
-                  <q-tooltip
-                    v-if="isDrawerCollapsed"
-                    anchor="center right"
-                    self="center left"
-                    :offset="[10, 0]"
-                    :class="item.isLogout ? 'bg-red-9' : 'bg-grey-9'"
+                <div v-for="item in section.items" :key="item.path">
+
+                  <q-item
+                    v-if="!item.children"
+                    clickable
+                    v-ripple
+                    :to="item.path"
+                    :class="['modern-menu-item', item.isLogout ? 'logout-item' : '']"
+                    active-class="modern-active"
+                    @click="item.isLogout ? handleLogout() : null"
                   >
-                    {{ t(item.labelKey) }}
-                  </q-tooltip>
-                </q-item>
+                    <q-item-section avatar>
+                      <q-icon :name="item.icon" :color="item.iconColor || ''"/>
+                    </q-item-section>
+                    <q-item-section v-if="!isDrawerCollapsed">{{ t(item.labelKey) }}</q-item-section>
 
-                <q-expansion-item
-                  v-else
-                  :icon="item.icon"
-                  :label="!isDrawerCollapsed ? t(item.labelKey) : ''"
-                  group="clinical"
-                  header-class="modern-expansion-header"
-                  expand-icon-class="text-grey-5"
-                  :default-opened="currentUser?.role === 'Nurse'"
-                  v-show="!isDrawerCollapsed"
-                >
-                  <div class="q-pl-lg q-pt-xs">
-                    <div class="submenu-line-container">
-                      <q-item
-                        v-for="sub in item.children"
-                        :key="sub.path"
-                        clickable
-                        v-ripple
-                        :to="sub.path"
-                        class="modern-submenu-item"
-                        active-class="submenu-active"
-                      >
-                        <q-item-section>
-                          <div class="row items-center"><div class="dot"></div> {{ t(sub.labelKey) }}</div>
-                        </q-item-section>
-                      </q-item>
+                    <q-tooltip
+                      v-if="isDrawerCollapsed"
+                      anchor="center right"
+                      self="center left"
+                      :offset="[10, 0]"
+                      :class="item.isLogout ? 'bg-red-9' : 'bg-grey-9'"
+                    >
+                      {{ t(item.labelKey) }}
+                    </q-tooltip>
+                  </q-item>
+
+                  <q-expansion-item
+                    v-else
+                    :icon="item.icon"
+                    :label="!isDrawerCollapsed ? t(item.labelKey) : ''"
+                    group="clinical"
+                    header-class="modern-expansion-header"
+                    expand-icon-class="text-grey-5"
+                    :default-opened="currentUser?.role === 'Nurse'"
+                    v-show="!isDrawerCollapsed"
+                  >
+                    <div class="q-pl-lg q-pt-xs">
+                      <div class="submenu-line-container">
+                        <q-item
+                          v-for="sub in item.children"
+                          :key="sub.path"
+                          clickable
+                          v-ripple
+                          :to="sub.path"
+                          class="modern-submenu-item"
+                          active-class="submenu-active"
+                        >
+                          <q-item-section>
+                            <div class="row items-center"><div class="dot"></div> {{ t(sub.labelKey) }}</div>
+                          </q-item-section>
+                        </q-item>
+                      </div>
                     </div>
-                  </div>
-                </q-expansion-item>
+                  </q-expansion-item>
 
-                <q-item
-                   v-if="item.children && isDrawerCollapsed"
-                   clickable
-                   v-ripple
-                   :to="item.children[0].path"
-                   class="modern-menu-item"
-                   active-class="modern-active"
-                >
-                   <q-item-section avatar><q-icon :name="item.icon" /></q-item-section>
-                   <q-tooltip anchor="center right" self="center left" :offset="[10, 0]" class="bg-grey-9">{{ t(item.labelKey) }}</q-tooltip>
-                </q-item>
+                  <q-item
+                     v-if="item.children && isDrawerCollapsed"
+                     clickable
+                     v-ripple
+                     :to="item.children[0].path"
+                     class="modern-menu-item"
+                     active-class="modern-active"
+                  >
+                     <q-item-section avatar><q-icon :name="item.icon" /></q-item-section>
+                     <q-tooltip anchor="center right" self="center left" :offset="[10, 0]" class="bg-grey-9">{{ t(item.labelKey) }}</q-tooltip>
+                  </q-item>
+
+                </div>
+
+                <q-separator v-if="index < menuSections.length - 1 && section.items.length > 0" class="q-my-md separator-dark" />
 
               </div>
 
-              <q-separator v-if="index < menuSections.length - 1 && section.items.length > 0" class="q-my-md separator-dark" />
+            </q-list>
+          </q-scroll-area>
 
-            </div>
+          <div
+            class="user-profile-mini q-pa-md border-top-dark cursor-pointer profile-hover"
+            v-if="currentUser"
+            @click="isProfileOpen = true"
+          >
+              <div class="row items-center no-wrap">
 
-          </q-list>
-        </q-scroll-area>
+                  <q-avatar size="42px" class="shadow-3 relative-position" :color="getRoleColor(currentUser.role)" text-color="white">
+                      <img v-if="currentUser.avatar_url" :src="currentUser.avatar_url">
+                      <template v-else>
+                          <q-icon v-if="currentUser.role === 'Doctor'" name="medical_services" size="24px" />
+                          <q-icon v-else-if="currentUser.role === 'Nurse'" name="local_hospital" size="24px" />
+                          <q-icon v-else-if="currentUser.role === 'Pharmacist'" name="vaccines" size="24px" />
+                          <q-icon v-else-if="currentUser.role === 'Admin'" name="security" size="24px" />
+                          <span v-else class="text-weight-bold text-h6">{{ (currentUser.firstName || currentUser.first_name || 'U').charAt(0) }}</span>
+                      </template>
+                      <div class="online-status-dot"></div>
+                  </q-avatar>
 
-        <div
-          class="user-profile-mini q-pa-md border-top-dark cursor-pointer profile-hover"
-          v-if="currentUser"
-          @click="isProfileOpen = true"
-        >
-            <div class="row items-center no-wrap">
+                  <div class="q-ml-md overflow-hidden col" v-if="!isDrawerCollapsed">
 
-                <q-avatar size="42px" class="shadow-3 relative-position" :color="getRoleColor(currentUser.role)" text-color="white">
-                    <img v-if="currentUser.avatar_url" :src="currentUser.avatar_url">
-                    <template v-else>
-                        <q-icon v-if="currentUser.role === 'Doctor'" name="medical_services" size="24px" />
-                        <q-icon v-else-if="currentUser.role === 'Nurse'" name="local_hospital" size="24px" />
-                        <q-icon v-else-if="currentUser.role === 'Pharmacist'" name="vaccines" size="24px" />
-                        <q-icon v-else-if="currentUser.role === 'Admin'" name="security" size="24px" />
-                        <span v-else class="text-weight-bold text-h6">{{ (currentUser.firstName || currentUser.first_name || 'U').charAt(0) }}</span>
-                    </template>
-                    <div class="online-status-dot"></div>
-                </q-avatar>
+                      <div class="text-subtitle2 text-white ellipsis text-weight-bold" style="line-height: 1.2;">
+                          {{ currentUser.prefix }} {{ currentUser.firstName || currentUser.first_name }} {{ currentUser.lastName || currentUser.last_name }}
+                      </div>
 
-                <div class="q-ml-md overflow-hidden col" v-if="!isDrawerCollapsed">
-
-                    <div class="text-subtitle2 text-white ellipsis text-weight-bold" style="line-height: 1.2;">
-                        {{ currentUser.prefix }} {{ currentUser.firstName || currentUser.first_name }} {{ currentUser.lastName || currentUser.last_name }}
-                    </div>
-
-                    <div class="row items-center q-mt-xs">
-                        <q-badge
-                            :color="getRoleColor(currentUser.role)"
-                            class="q-py-xs q-px-sm text-weight-bold shadow-1"
-                            rounded
-                            style="font-size: 0.65rem;"
-                        >
-                            <q-icon
-                                :name="currentUser.role === 'Admin' ? 'verified_user' : 'badge'"
-                                size="10px"
-                                class="q-mr-xs"
-                            />
-                            {{ currentUser.role ? currentUser.role.toUpperCase() : 'USER' }}
-                        </q-badge>
-                    </div>
-                </div>
-            </div>
-            <q-tooltip v-if="!isDrawerCollapsed" anchor="top middle" self="bottom middle" :offset="[0, 10]" class="bg-primary text-body2">
-              คลิกเพื่อดูข้อมูลผู้ใช้
-            </q-tooltip>
-        </div>
+                      <div class="row items-center q-mt-xs">
+                          <q-badge
+                              :color="getRoleColor(currentUser.role)"
+                              class="q-py-xs q-px-sm text-weight-bold shadow-1"
+                              rounded
+                              style="font-size: 0.65rem;"
+                          >
+                              <q-icon
+                                  :name="currentUser.role === 'Admin' ? 'verified_user' : 'badge'"
+                                  size="10px"
+                                  class="q-mr-xs"
+                              />
+                              {{ currentUser.role ? currentUser.role.toUpperCase() : 'USER' }}
+                          </q-badge>
+                      </div>
+                  </div>
+              </div>
+              <q-tooltip v-if="!isDrawerCollapsed" anchor="top middle" self="bottom middle" :offset="[0, 10]" class="bg-primary text-body2">
+                คลิกเพื่อดูข้อมูลผู้ใช้
+              </q-tooltip>
+          </div>
+        </template>
 
       </div>
     </q-drawer>

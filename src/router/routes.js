@@ -15,7 +15,7 @@ const routes = [
       {
         path: "", // ทำให้หน้าแรกเป็นหน้า EmrHome
         name: "Home",
-        component: () => import('pages/MyEMR_App/EmrHome.vue')
+        redirect: '/myemr-app/login'
       },
       // --- MyEMR_App Routes ---
       // ย้าย route ทั้งหมดของโปรเจกต์คุณมาไว้ใน children ของ MainLayout
