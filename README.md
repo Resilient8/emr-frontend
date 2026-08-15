@@ -38,4 +38,4 @@ A modern, responsive full-stack Electronic Medical Record (EMR) application buil
 ## 👨‍💻 Author
 **Kasipsit Kaewchairattanachot**
 - LinkedIn: [www.linkedin.com/in/kasiphasit-qa](https://www.linkedin.com/in/kasiphasit-qa)
-- Email: lummaenaping@gmail.com
+- Email: kasi.pasit@gmail.com
