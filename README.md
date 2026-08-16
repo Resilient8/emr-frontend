@@ -28,7 +28,18 @@ A modern, responsive full-stack Electronic Medical Record (EMR) application buil
 
 ---
 
+## 🧪 Automated Testing 
+This project includes comprehensive End-to-End (E2E) test suites using **Playwright** to ensure the reliability of core clinical workflows.
+
+The test scripts are located in the `tests/` directory:
+- `01-nurse-flow.spec.ts`: Validates patient registration and vital signs recording logic.
+- `02-doctor-flow.spec.ts`: Verifies diagnosis submissions and prescription processes.
+- `03-pharmacist-flow.spec.ts`: Tests the real-time dispensing queue and auto-stock deduction integrity.
+
+---
+
 ## 🛠️ Technology Stack
+*   **Testing:** Playwright (E2E)
 *   **Frontend:** Vue.js 3 (Composition API), Quasar Framework, Pinia, Vue Router
 *   **Backend:** Node.js, Express.js
 *   **Database:** MySQL with Sequelize ORM
