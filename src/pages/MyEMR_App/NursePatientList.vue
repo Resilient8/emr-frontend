@@ -459,7 +459,7 @@ const activeSortOption = ref('time_desc');
 const selectedDate = ref(null);
 
 // 🔥 ตัวแปร Toggle Filter (Default = true ตามที่คุณต้องการ)
-const filterByMyRecords = ref(true);
+const filterByMyRecords = ref(false);
 
 const showVisitSelector = ref(false);
 const selectedPatientForDialog = ref(null);
